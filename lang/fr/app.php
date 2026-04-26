@@ -40,4 +40,5 @@ return [
     'date_time'          => 'Date & Heure',
     'edit'               => 'Modifier',
     'back'               => 'Retour',
+    'status_readonly' => 'Seul le médecin peut modifier le statut.',
 ];

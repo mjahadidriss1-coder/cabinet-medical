@@ -6,6 +6,12 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\LangController;
 
+// Landing page (publique)
+Route::get('/', function () {
+    if (auth()->check()) return redirect()->route('appointments.index');
+    return view('welcome');
+});
+
 // Auth
 Route::get('/login',    [LoginController::class,    'showForm'])->name('login');
 Route::post('/login',   [LoginController::class,    'login']);
@@ -18,7 +24,7 @@ Route::get('/lang/{locale}', [LangController::class, 'switch'])->name('lang.swit
 
 // App (auth requise)
 Route::middleware('auth')->group(function () {
-    Route::get('/', fn() => redirect()->route('appointments.index'));
+    // ← supprimé : Route::get('/', ...)
     Route::resource('appointments', AppointmentController::class);
     Route::resource('services', ServiceController::class);
 });

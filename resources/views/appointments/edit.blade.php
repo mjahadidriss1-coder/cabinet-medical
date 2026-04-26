@@ -5,7 +5,9 @@
 @section('content')
 <div class="card border-0 shadow-sm" style="max-width:700px;margin:auto">
     <div class="card-body p-4">
-        <h5 class="fw-bold mb-4"><i class="fas fa-edit me-2 text-warning"></i>{{ __('app.edit_appointment') }}</h5>
+        <h5 class="fw-bold mb-4">
+            <i class="fas fa-edit me-2 text-warning"></i>{{ __('app.edit_appointment') }}
+        </h5>
         @if($errors->any())
             <div class="alert alert-danger">{{ $errors->first() }}</div>
         @endif
@@ -42,6 +44,9 @@
                     <input type="time" name="appointment_time" class="form-control"
                         value="{{ $appointment->appointment_time }}" required>
                 </div>
+
+                {{-- Statut : seulement médecin et admin --}}
+                @if(auth()->user()->isMedecin() || auth()->user()->isAdmin())
                 <div class="col-md-6">
                     <label class="form-label">{{ __('app.status') }}</label>
                     <select name="statut" class="form-select">
@@ -52,14 +57,30 @@
                         @endforeach
                     </select>
                 </div>
+                @else
+                {{-- Patient : statut caché, valeur conservée --}}
+                <input type="hidden" name="statut" value="{{ $appointment->statut }}">
+                <div class="col-md-6">
+                    <label class="form-label">{{ __('app.status') }}</label>
+                    <div class="form-control bg-light text-muted" style="cursor:not-allowed">
+                        {{ __('app.statut_'.$appointment->statut) }}
+                    </div>
+                    <small class="text-muted">{{ __('app.status_readonly') }}</small>
+                </div>
+                @endif
+
                 <div class="col-12">
                     <label class="form-label">{{ __('app.notes') }}</label>
                     <textarea name="notes" class="form-control" rows="3">{{ $appointment->notes }}</textarea>
                 </div>
             </div>
             <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-warning"><i class="fas fa-save me-1"></i>{{ __('app.update') }}</button>
-                <a href="{{ route('appointments.index') }}" class="btn btn-secondary">{{ __('app.cancel') }}</a>
+                <button class="btn btn-warning">
+                    <i class="fas fa-save me-1"></i>{{ __('app.update') }}
+                </button>
+                <a href="{{ route('appointments.index') }}" class="btn btn-secondary">
+                    {{ __('app.cancel') }}
+                </a>
             </div>
         </form>
     </div>

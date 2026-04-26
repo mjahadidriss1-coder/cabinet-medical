@@ -49,7 +49,7 @@ class AppointmentController extends Controller {
         return view('appointments.create', compact('medecins', 'services', 'patients'));
     }
 
-    public function store(Request $request) {
+public function store(Request $request) {
     $data = $request->validate([
         'patient_id'       => 'sometimes|exists:users,id',
         'medecin_id'       => 'required|exists:users,id',
@@ -59,18 +59,11 @@ class AppointmentController extends Controller {
         'notes'            => 'nullable|string|max:500',
     ]);
 
-    // Forcer patient_id si c'est un patient
     if (auth()->user()->isPatient()) {
         $data['patient_id'] = auth()->id();
     }
 
     $appointment = Appointment::create($data);
-    $appointment->load(['patient', 'medecin', 'service']);
-
-    try {
-        Mail::to($appointment->patient->email)
-            ->send(new AppointmentConfirmation($appointment));
-    } catch (\Exception $e) {}
 
     return redirect()->route('appointments.index')
         ->with('success', __('app.appointment_created'));
@@ -90,20 +83,32 @@ class AppointmentController extends Controller {
     }
 
     public function update(Request $request, Appointment $appointment) {
-        $this->authorizeAppointment($appointment);
-        $data = $request->validate([
-            'medecin_id'       => 'required|exists:users,id',
-            'service_id'       => 'required|exists:services,id',
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required',
-            'statut'           => 'required|in:en_attente,confirme,annule,termine',
-            'notes'            => 'nullable|string|max:500',
-        ]);
+    $this->authorizeAppointment($appointment);
+    
+    $ancienStatut = $appointment->statut; // ← sauvegarder l'ancien statut
+    
+    $data = $request->validate([
+        'medecin_id'       => 'required|exists:users,id',
+        'service_id'       => 'required|exists:services,id',
+        'appointment_date' => 'required|date',
+        'appointment_time' => 'required',
+        'statut'           => 'required|in:en_attente,confirme,annule,termine',
+        'notes'            => 'nullable|string|max:500',
+    ]);
 
-        $appointment->update($data);
-        return redirect()->route('appointments.index')
-            ->with('success', __('app.appointment_updated'));
+    $appointment->update($data);
+
+    // ← Envoyer email seulement quand statut passe à "confirme"
+    if ($ancienStatut !== 'confirme' && $data['statut'] === 'confirme') {
+        try {
+            Mail::to($appointment->patient->email)
+                ->send(new AppointmentConfirmation($appointment));
+        } catch (\Exception $e) {}
     }
+
+    return redirect()->route('appointments.index')
+        ->with('success', __('app.appointment_updated'));
+}
 
     public function destroy(Appointment $appointment) {
         $this->authorizeAppointment($appointment);
