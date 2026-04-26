@@ -11,34 +11,36 @@ use Illuminate\Support\Facades\Mail;
 class AppointmentController extends Controller {
 
     public function index(Request $request) {
-        $query = Appointment::with(['patient', 'medecin', 'service']);
+    $query = Appointment::with(['patient', 'medecin', 'service']);
 
-        if (auth()->user()->isPatient()) {
-            $query->where('patient_id', auth()->id());
-        } elseif (auth()->user()->isMedecin()) {
-            $query->where('medecin_id', auth()->id());
-        }
+    if (auth()->user()->isPatient()) {
+        $query->where('patient_id', auth()->id());
+    } elseif (auth()->user()->isMedecin()) {
+        $query->where('medecin_id', auth()->id());
+    }
 
-        // Recherche
-        if ($search = $request->get('search')) {
-            $query->where(function($q) use ($search) {
-                $q->whereHas('patient',  fn($q) => $q->where('name', 'like', "%$search%"))
-                  ->orWhereHas('medecin', fn($q) => $q->where('name', 'like', "%$search%"))
-                  ->orWhereHas('service', fn($q) => $q->where('name', 'like', "%$search%"))
-                  ->orWhere('statut', 'like', "%$search%");
-            });
-        }
+    if ($search = $request->get('search')) {
+        $query->where(function($q) use ($search) {
+            $q->whereHas('patient',  fn($q) => $q->where('name', 'like', "%$search%"))
+              ->orWhereHas('medecin', fn($q) => $q->where('name', 'like', "%$search%"))
+              ->orWhereHas('service', fn($q) => $q->where('name', 'like', "%$search%"))
+              ->orWhere('statut', 'like', "%$search%");
+        });
+    }
 
-        $appointments = $query->latest()->paginate(10);
+    $appointments = $query->latest()->paginate(10);
 
-    // Retour partiel pour Axios
     if ($request->ajax()) {
         return view('appointments.partials.table', compact('appointments'))->render();
     }
 
-    return view('appointments.index', compact('appointments'));
+    // Données pour le modal
+    $medecins = \App\Models\User::where('role', 'medecin')->get();
+    $services = \App\Models\Service::all();
+    $patients = \App\Models\User::where('role', 'patient')->get();
 
-    }
+    return view('appointments.index', compact('appointments', 'medecins', 'services', 'patients'));
+}
 
     public function create() {
         $medecins = User::where('role', 'medecin')->get();
