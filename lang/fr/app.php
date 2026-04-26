@@ -29,4 +29,11 @@ return [
     'statut_confirme'     => 'Confirmé',
     'statut_annule'       => 'Annulé',
     'statut_termine'      => 'Terminé',
+    'new_service'  => 'Nouveau service',
+    'name'         => 'Nom',
+    'description'  => 'Description',
+    'duration'     => 'Durée (min)',
+    'price'        => 'Prix (MAD)',
+    'minutes'      => 'min',
+    'no_services'  => 'Aucun service trouvé.',
 ];

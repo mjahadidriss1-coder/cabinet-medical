@@ -29,4 +29,11 @@ return [
     'statut_confirme'     => 'مؤكد',
     'statut_annule'       => 'ملغى',
     'statut_termine'      => 'منتهي',
+    'new_service'  => 'خدمة جديدة',
+    'name'         => 'الاسم',
+    'description'  => 'الوصف',
+    'duration'     => 'المدة (دقيقة)',
+    'price'        => 'السعر (درهم)',
+    'minutes'      => 'دقيقة',
+    'no_services'  => 'لا توجد خدمات.',
 ];
