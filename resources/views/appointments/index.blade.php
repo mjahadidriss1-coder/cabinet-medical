@@ -48,18 +48,25 @@
                         <div class="alert alert-danger">{{ $errors->first() }}</div>
                     @endif
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">{{ __('app.patient') }} <span class="text-danger">*</span></label>
-                            <select name="patient_id" class="form-select" required>
-                                <option value="">-- Choisir --</option>
-                                @foreach($patients as $p)
-                                    <option value="{{ $p->id }}"
-                                        {{ auth()->user()->isPatient() && auth()->id()==$p->id ? 'selected' : '' }}>
-                                        {{ $p->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if(auth()->user()->isPatient())
+                            {{-- Patient voit son nom, pas de choix --}}
+                            <input type="hidden" name="patient_id" value="{{ auth()->id() }}">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ __('app.patient') }}</label>
+                                <input type="text" class="form-control" value="{{ auth()->user()->name }}" disabled>
+                            </div>
+                        @else
+                            {{-- Admin/Médecin peut choisir n'importe quel patient --}}
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">{{ __('app.patient') }} <span class="text-danger">*</span></label>
+                                <select name="patient_id" class="form-select" required>
+                                    <option value="">-- Choisir --</option>
+                                    @foreach($patients as $p)
+                                        <option value="{{ $p->id }}">{{ $p->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">{{ __('app.doctor') }} <span class="text-danger">*</span></label>
                             <select name="medecin_id" class="form-select" required>

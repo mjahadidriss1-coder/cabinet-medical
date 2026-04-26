@@ -50,29 +50,31 @@ class AppointmentController extends Controller {
     }
 
     public function store(Request $request) {
-        $data = $request->validate([
-            'patient_id'       => 'required|exists:users,id',
-            'medecin_id'       => 'required|exists:users,id',
-            'service_id'       => 'required|exists:services,id',
-            'appointment_date' => 'required|date|after_or_equal:today',
-            'appointment_time' => 'required',
-            'notes'            => 'nullable|string|max:500',
-        ]);
+    $data = $request->validate([
+        'patient_id'       => 'sometimes|exists:users,id',
+        'medecin_id'       => 'required|exists:users,id',
+        'service_id'       => 'required|exists:services,id',
+        'appointment_date' => 'required|date|after_or_equal:today',
+        'appointment_time' => 'required',
+        'notes'            => 'nullable|string|max:500',
+    ]);
 
-        $appointment = Appointment::create($data);
-        $appointment->load(['patient', 'medecin', 'service']);
-
-        // Envoi email confirmation
-        try {
-            Mail::to($appointment->patient->email)
-                ->send(new AppointmentConfirmation($appointment));
-        } catch (\Exception $e) {
-            // log silencieux si mail échoue
-        }
-
-        return redirect()->route('appointments.index')
-            ->with('success', __('app.appointment_created'));
+    // Forcer patient_id si c'est un patient
+    if (auth()->user()->isPatient()) {
+        $data['patient_id'] = auth()->id();
     }
+
+    $appointment = Appointment::create($data);
+    $appointment->load(['patient', 'medecin', 'service']);
+
+    try {
+        Mail::to($appointment->patient->email)
+            ->send(new AppointmentConfirmation($appointment));
+    } catch (\Exception $e) {}
+
+    return redirect()->route('appointments.index')
+        ->with('success', __('app.appointment_created'));
+}
 
     public function show(Appointment $appointment) {
         $this->authorizeAppointment($appointment);
