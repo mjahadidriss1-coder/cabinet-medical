@@ -6,8 +6,18 @@ use Illuminate\Http\Request;
 
 class SetLocale {
     public function handle(Request $request, Closure $next) {
-        $locale = session('locale', config('app.locale'));
+        if ($request->hasSession()) {
+            $locale = $request->session()->get('locale', 'fr');
+        } else {
+            $locale = 'fr';
+        }
+
+        if (!in_array($locale, ['fr', 'ar'])) {
+            $locale = 'fr';
+        }
+
         app()->setLocale($locale);
+
         return $next($request);
     }
 }

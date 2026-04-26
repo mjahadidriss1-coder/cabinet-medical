@@ -14,11 +14,11 @@ Route::get('/register', [RegisterController::class, 'showForm'])->name('register
 Route::post('/register',[RegisterController::class, 'register']);
 
 // Langue
-//Route::get('/lang/{locale}', [LangController::class, 'switch'])->name('lang.switch');
+Route::get('/lang/{locale}', [LangController::class, 'switch'])->name('lang.switch');
 
 // App (auth requise)
 Route::middleware('auth')->group(function () {
     Route::get('/', fn() => redirect()->route('appointments.index'));
-    //Route::resource('appointments', AppointmentController::class);
-    //Route::resource('services', ServiceController::class);
+    Route::resource('appointments', AppointmentController::class);
+    Route::resource('services', ServiceController::class);
 });
