@@ -36,4 +36,8 @@ return [
     'price'        => 'السعر (درهم)',
     'minutes'      => 'دقيقة',
     'no_services'  => 'لا توجد خدمات.',
+    'appointment_detail' => 'تفاصيل الموعد',
+    'date_time'          => 'التاريخ والوقت',
+    'edit'               => 'تعديل',
+    'back'               => 'رجوع',
 ];

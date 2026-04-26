@@ -36,4 +36,8 @@ return [
     'price'        => 'Prix (MAD)',
     'minutes'      => 'min',
     'no_services'  => 'Aucun service trouvé.',
+    'appointment_detail' => 'Détail du rendez-vous',
+    'date_time'          => 'Date & Heure',
+    'edit'               => 'Modifier',
+    'back'               => 'Retour',
 ];
