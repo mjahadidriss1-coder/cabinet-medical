@@ -88,5 +88,13 @@ function bindDeleteButtons() {
     });
 }
 bindDeleteButtons();
+
+axios.get('{{ route("appointments.index") }}', {
+    params: { search: q },
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+}).then(res => {
+    document.getElementById('appointmentsTable').innerHTML = res.data;
+    bindDeleteButtons();
+}).finally(() => spinner.classList.add('d-none'));
 </script>
 @endpush

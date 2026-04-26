@@ -30,7 +30,14 @@ class AppointmentController extends Controller {
         }
 
         $appointments = $query->latest()->paginate(10);
-        return view('appointments.index', compact('appointments'));
+
+    // Retour partiel pour Axios
+    if ($request->ajax()) {
+        return view('appointments.partials.table', compact('appointments'))->render();
+    }
+
+    return view('appointments.index', compact('appointments'));
+
     }
 
     public function create() {
