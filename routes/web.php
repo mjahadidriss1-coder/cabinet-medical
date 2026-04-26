@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\LangController;
+use App\Http\Controllers\UserController;
 
 // Landing page (publique)
 Route::get('/', function () {
@@ -27,4 +28,10 @@ Route::middleware('auth')->group(function () {
     // ← supprimé : Route::get('/', ...)
     Route::resource('appointments', AppointmentController::class);
     Route::resource('services', ServiceController::class);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::resource('appointments', AppointmentController::class);
+    Route::resource('services', ServiceController::class);
+    Route::resource('users', UserController::class); // ← ajouter
 });

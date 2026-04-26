@@ -242,6 +242,13 @@
             {{ __('app.services') }}
         </a>
         @endif
+        @if(auth()->user()->isAdmin())
+        <a href="{{ route('users.index') }}"
+        class="sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+            <i class="fas fa-users"></i>
+            Utilisateurs
+        </a>
+        @endif
     </nav>
 
     <!-- Lang -->
