@@ -16,7 +16,7 @@ Projet CC2 — Module : Développer en back-end | DD 2ème année 2025/2026
 
 ```bash
 # 1. Cloner le repo
-git clone https://github.com/votre-username/cabinet-medical.git
+git clone https://github.com/mjahadidriss1-coder/cabinet-medical.git
 cd cabinet-medical
 
 # 2. Installer les dépendances PHP
