@@ -274,7 +274,7 @@
         <a href="{{ route('users.index') }}"
         class="sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
             <i class="fas fa-users"></i>
-            Utilisateurs
+            {{ __('app.users') }}
         </a>
         @endif
     </nav>
