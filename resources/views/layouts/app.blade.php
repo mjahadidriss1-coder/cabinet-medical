@@ -216,6 +216,34 @@
             display: flex; align-items: center; gap: .5rem;
         }
         .page-header h4 i { color: var(--teal); font-size: 1.1rem; }
+
+                /* ── PAGINATION ── */
+        .pagination { gap: 4px; }
+        .pagination .page-link {
+            border-radius: 8px !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #475569 !important;
+            padding: .4rem .75rem !important;
+            font-size: .85rem !important;
+            line-height: 1.5 !important;
+            min-width: 36px !important;
+            text-align: center !important;
+            background: #fff !important;
+        }
+        .pagination .page-link:hover {
+            background: #f1f5f9 !important;
+            color: #0f172a !important;
+        }
+        .pagination .page-item.active .page-link {
+            background: var(--teal) !important;
+            border-color: var(--teal) !important;
+            color: #fff !important;
+        }
+        .pagination .page-item.disabled .page-link {
+            background: #f8fafc !important;
+            color: #cbd5e1 !important;
+        }
+        svg { max-width: 16px !important; max-height: 16px !important; }
     </style>
     @stack('styles')
 </head>
