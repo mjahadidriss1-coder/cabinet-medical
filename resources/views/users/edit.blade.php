@@ -28,6 +28,7 @@
                     <select name="role" class="form-select" id="roleSelect" required>
                         <option value="patient" {{ $user->role=='patient' ? 'selected':'' }}>{{ __('app.patient') }}</option>
                         <option value="medecin" {{ $user->role=='medecin' ? 'selected':'' }}>{{ __('app.medecin') }}</option>
+                        <option value="admin"   {{ $user->role=='admin'   ? 'selected':'' }}>Admin</option> 
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -41,11 +42,11 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">{{ __('app.new_password_opt') }}</label>
-                    <input type="password" name="password" class="form-control">
+                    <input type="password" name="password" class="form-control" autocomplete="new-password">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">{{ __('app.confirm_password') }}</label>
-                    <input type="password" name="password_confirmation" class="form-control">
+                    <input type="password" name="password_confirmation" class="form-control" autocomplete="new-password">
                 </div>
             </div>
             <div class="d-flex gap-2 mt-4">

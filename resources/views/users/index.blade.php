@@ -25,6 +25,55 @@
     </div>
 </div>
 
+<!-- ADMINS TABLE -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-0">
+        <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center"
+             style="cursor:pointer" onclick="toggleSection('admins')">
+            <h6 class="fw-bold mb-0" style="color:#dc2626">
+                <i class="fas fa-shield-halved me-2"></i>
+                Admins (<span id="adminsCount">{{ $admins->count() }}</span>)
+            </h6>
+            <i class="fas fa-chevron-up text-muted" id="adminsChevron"></i>
+        </div>
+        <div id="adminsSection">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{{ __('app.full_name') }}</th>
+                        <th>{{ __('app.email') }}</th>
+                        <th>{{ __('app.actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @forelse($admins as $u)
+                <tr>
+                    <td class="fw-semibold">{{ $u->name }}</td>
+                    <td class="text-muted">{{ $u->email }}</td>
+                    <td>
+                        @if($u->id !== auth()->id())
+                        <a href="{{ route('users.edit', $u) }}" class="btn btn-sm btn-outline-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger btn-delete-user"
+                            data-url="{{ route('users.destroy', $u) }}"
+                            data-name="{{ $u->name }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        @else
+                        <span class="badge bg-secondary">Vous</span>
+                        @endif
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="3" class="text-center text-muted py-3">Aucun admin.</td></tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <!-- PATIENTS TABLE -->
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-body p-0">
@@ -73,7 +122,7 @@
 </div>
 
 <!-- MEDECINS TABLE -->
-<div class="card border-0 shadow-sm">
+<div class="card border-0 shadow-sm mb-4">
     <div class="card-body p-0">
         <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center"
              style="cursor:pointer" onclick="toggleSection('medecins')">
@@ -152,6 +201,7 @@
                             <select name="role" class="form-select" id="roleSelect" required>
                                 <option value="patient" {{ old('role')=='patient' ? 'selected':'' }}>{{ __('app.role_patient') }}</option>
                                 <option value="medecin" {{ old('role')=='medecin' ? 'selected':'' }}>{{ __('app.role_medecin') }}</option>
+                                <option value="admin"   {{ old('role')=='admin'   ? 'selected':'' }}>Admin</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -219,7 +269,7 @@
 @push('scripts')
 <script>
 // ── COLLAPSE ──
-const collapsed = { patients: false, medecins: false };
+const collapsed = { patients: false, medecins: false, admins: false };
 
 function toggleSection(key) {
     collapsed[key] = !collapsed[key];

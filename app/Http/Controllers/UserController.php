@@ -28,6 +28,8 @@ class UserController extends Controller {
                       ->orWhere('email', 'like', "%$q%");
             }))->get();
 
+        $admins = User::where('role', 'admin')->get();
+
         if ($request->ajax()) {
             return response()->json([
                 'patients'       => view('users.partials.patients-rows', compact('patients'))->render(),
@@ -37,7 +39,7 @@ class UserController extends Controller {
             ]);
         }
 
-        return view('users.index', compact('patients', 'medecins'));
+        return view('users.index', compact('patients', 'medecins', 'admins'));
     }
 
     public function create() {
@@ -51,7 +53,7 @@ class UserController extends Controller {
             'name'       => 'required|string|max:255',
             'email'      => 'required|email|unique:users',
             'password'   => 'required|min:8|confirmed',
-            'role'       => 'required|in:patient,medecin',
+            'role'       => 'required|in:patient,medecin,admin',
             'phone'      => 'nullable|string|max:20',
             'specialite' => 'nullable|string|max:255',
         ]);
@@ -79,7 +81,7 @@ class UserController extends Controller {
         $data = $request->validate([
             'name'       => 'required|string|max:255',
             'email'      => 'required|email|unique:users,email,'.$user->id,
-            'role'       => 'required|in:patient,medecin',
+            'role'       => 'required|in:patient,medecin,admin',
             'phone'      => 'nullable|string|max:20',
             'specialite' => 'nullable|string|max:255',
             'password'   => 'nullable|min:8|confirmed',
